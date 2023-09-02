@@ -54,7 +54,7 @@ def _install_sdk_impl(ctx):
 install_sdk = rule(
     attrs = {{
         "_sdk_manager": attr.label(
-            default = Label("//:tools/bin/sdkmanager"),
+            default = Label("//:cmdline-tools/bin/sdkmanager"),
             allow_single_file = True,
             executable = True,
             cfg = "host",
