@@ -1,7 +1,3 @@
-# The URL of the SDK tools to download. This should be changed to an os-specific map in the future
-# but without a mac or windows machine to build on, I can't verify how they would work.
-_SDK_TOOLS_URL = 'https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip'
-
 # Used as both the install target name and package name for shortand inlining, i.e.
 # `@androidsdk//install` for `@androidsdk//install:install`
 _INSTALL_TARGET_NAME = "install"
@@ -16,9 +12,31 @@ _INSTALL_OUTPUT_NAME = "sdk"
 # invocation.
 _SDK_ROOT_PATH = '_'
 
+_sdk_tools_configs = {
+    "mac os x": {
+        "url": "https://dl.google.com/android/repository/commandlinetools-mac-9477386_latest.zip",
+        "sha256": "2072ffce4f54cdc0e6d2074d2f381e7e579b7d63e915c220b96a7db95b2900ee",
+    },
+    "linux": {
+        "url": "https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip",
+        "sha256": "bd1aa17c7ef10066949c88dc6c9c8d536be27f992a1f3b5a584f9bd2ba5646a0",
+    },
+    "windows": {
+        "url": "https://dl.google.com/android/repository/commandlinetools-win-9477386_latest.zip",
+        "sha256": "696431978daadd33a28841320659835ba8db8080a535b8f35e9e60701ab8b491",
+    }
+}
+
 def _android_sdk_repository_impl(repo_ctx):
+    os_name = repo_ctx.os.name.lower()
+    if os_name.startswith("windows"):
+        os_name = "windows"
+    cfg = _sdk_tools_configs.get(os_name, None)
+    if cfg == None:
+        fail("Unsupported operating system: " + os_name)
+
     # Download Android SDK tools
-    repo_ctx.download_and_extract(_SDK_TOOLS_URL)
+    repo_ctx.download_and_extract(url = cfg["url"], sha256 = cfg["sha256"])
 
     # BUILD folder in the root of the generated repository
     repo_ctx.file("BUILD", content = "exports_files(['tools/bin/sdkmanager'], visibility = ['//visibility:public'])", executable = False)
