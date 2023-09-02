@@ -39,7 +39,7 @@ def _android_sdk_repository_impl(repo_ctx):
     repo_ctx.download_and_extract(url = cfg["url"], sha256 = cfg["sha256"])
 
     # BUILD folder in the root of the generated repository
-    repo_ctx.file("BUILD", content = "exports_files(['tools/bin/sdkmanager'], visibility = ['//visibility:public'])", executable = False)
+    repo_ctx.file("BUILD", content = "exports_files(['cmdline-tools/bin/sdkmanager'], visibility = ['//visibility:public'])", executable = False)
 
     # Bazel rules file for the repository. All logic should live here
     repo_ctx.file(_INSTALL_TARGET_NAME + "/internal.bzl", content = """

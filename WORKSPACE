@@ -8,8 +8,3 @@ android_sdk_repository(
     api_level = 27,
     build_tools_version = "27.0.3",
 )
-
-maven_jar(
-    name = "com_google_guava_guava",
-    artifact = "com.google.guava:guava:20.0"
-)
